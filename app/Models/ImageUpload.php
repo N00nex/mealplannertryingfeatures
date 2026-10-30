@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 
 /**
  * @method static create(array $array)
  */
 class ImageUpload extends Model
 {
-    public mixed $image;
     /**
      * @method static \Illuminate\Database\Eloquent\Builder|ImageUpload create(array $attributes = [])
      */
