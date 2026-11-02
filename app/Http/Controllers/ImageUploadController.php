@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ImageArray;
 use App\Models\ImageUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -10,84 +11,44 @@ class ImageUploadController extends Controller
 {
     public function index()
     {
-        // first() gibt entweder ein Model-Objekt ODER null zurück, wenn die Tabelle leer ist
-        $image = ImageUpload::query()->first();
 
-        return view('image_upload.index', compact('image'));
-    }
+        $imageCollection = ImageUpload::with('imageArray')->get();
 
-    public function show(ImageUpload $imageUpload)
-    {
-        return Storage::disk('s3')->response(
-            $imageUpload->image,
-            null,
-            [
-                'Content-Disposition' => 'inline',
-            ]
-        );
+        // übergibt imageCollection als Collection weiter
+        return view('image_upload.index', compact('imageCollection'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'image' => ['required', 'image'],
+            'imageCollection' => ['required', 'array', 'min:1'],
+            'imageCollection.*' => ['required', 'image', 'max:5120'],
         ]);
+        // erstelle einen datensatz in der tabelle (ohne daten)
+        $imageUpload = ImageUpload::create();
 
-        $imageUpload = ImageUpload::query()->first();
-        $oldPath = $imageUpload?->image;
-
-        // Neues Bild speichern
-        $newPath = $request->file('image')->store('uploads', 's3');
-
-        if ($imageUpload) {
-            // Nur den einen vorhandenen Datenbankeintrag aktualisieren
-            $imageUpload->update([
-                'image' => $newPath,
-            ]);
-        } else {
-            // Nur beim ersten Upload einen Eintrag erstellen
-            ImageUpload::create([
-                'image' => $newPath,
+        // imageCollection[] name im Form besagt dass mehrere files hochgeladen werden können.
+        // die schleife geht durch die images und speichert sie im s3
+        foreach ($request->file('imageCollection') as $image) {
+            $imageUpload->ImageArray()->create([
+                'image_path' => $image->store('uploads', 's3'),
             ]);
         }
 
-        // Nur die eine alte Datei löschen
-        if ($oldPath && Storage::disk('s3')->exists($oldPath)) {
-            Storage::disk('s3')->delete($oldPath);
-        }
-
-        return redirect()
-            ->route('image-upload.index')
-            ->with('success', 'Bild erfolgreich in RustFS gespeichert!');
+        return back()->with('success', 'Bilder erfolgreich hochgeladen!');
     }
 
-    public function update(Request $request, ImageUpload $imageUpload)
+    public function show(ImageArray $imageArray)
     {
-        $request->validate([
-            'image' => ['required', 'image', 'max:5120'],
-        ]);
-
-        if (Storage::disk('s3')->exists($imageUpload->image)) {
-            Storage::disk('s3')->delete($imageUpload->image);
-        }
-
-        $path = $request->file('image')->store('uploads', 's3');
-
-        $imageUpload->update([
-            'image' => $path,
-        ]);
-
-        return back()->with('success', 'Bild erfolgreich aktualisiert!');
+        return Storage::disk('s3')->response($imageArray->image_path);
     }
 
-    public function destroy(ImageUpload $imageUpload)
+    public function destroy(ImageArray $imageArray)
     {
-        $path = $imageUpload->image;
-        if (Storage::disk('s3')->exists($path)) {
-            Storage::disk('s3')->delete($path);
-        }
-        $imageUpload->delete();
+        Storage::disk('s3')->delete($imageArray->image_path);
 
-        return back()->with('success', 'Bild erfolgreich gelöscht!');
+        $imageArray->delete();
+
+        return back()->with('success', 'Bild gelöscht!');
     }
 }

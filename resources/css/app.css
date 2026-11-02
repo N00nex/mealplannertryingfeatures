@@ -5,6 +5,10 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
 @source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+/* Optional: If you need Tailwind to scan custom directories or cached views */
+@source "../**/*.blade.php";
+@source "../**/*.js";
+@source "../../storage/framework/views/*.php";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

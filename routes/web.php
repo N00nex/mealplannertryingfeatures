@@ -17,10 +17,8 @@ Route::get('/image-upload', [ImageUploadController::class, 'index'])
 Route::post('/image-upload', [ImageUploadController::class, 'store'])
     ->name('image-upload.store');
 
-Route::get('/image-upload/{imageUpload}/file', [ImageUploadController::class, 'show'])
+Route::get('/image-upload/{imageArray}/file', [ImageUploadController::class, 'show'])
     ->name('image-upload.show');
 
-Route::delete('/image-upload/{imageUpload}', [ImageUploadController::class, 'destroy'])
+Route::delete('/image-upload/{imageArray}', [ImageUploadController::class, 'destroy'])
     ->name('image-upload.destroy');
-
-
