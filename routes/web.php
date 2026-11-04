@@ -5,8 +5,9 @@ use App\Http\Controllers\LebensmittelController;
 use App\Http\Controllers\OffController;
 use App\Http\Controllers\USDAIngredientController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', fn () => Inertia::render('Home'))->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
