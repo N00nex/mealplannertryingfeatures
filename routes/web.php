@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\ImageUploadController;
+use App\Http\Controllers\LebensmittelController;
+use App\Http\Controllers\OffController;
+use App\Http\Controllers\USDAIngredientController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -22,3 +25,11 @@ Route::get('/image-upload/{imageArray}/file', [ImageUploadController::class, 'sh
 
 Route::delete('/image-upload/{imageArray}', [ImageUploadController::class, 'destroy'])
     ->name('image-upload.destroy');
+
+Route::get('/ingredients', [OffController::class, 'index'])
+    ->name('ingredients.index');
+
+Route::get('/lebensmittel', [LebensmittelController::class, 'index'])
+    ->name('lebensmittel.index');
+
+Route::get('/USDAIngredients', [USDAIngredientController::class, 'index'])->name('foods.index');

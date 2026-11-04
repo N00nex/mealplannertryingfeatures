@@ -1,4 +1,6 @@
 <?php
+
+/*
 // LARAVEL OPENFOODFACTS PACKAGE DOESNT REALLY WORK (USES OLD DEPRECATED API)
 namespace App\Services;
 
@@ -65,3 +67,4 @@ class OFFApiService
         }
     }
 }
+*/

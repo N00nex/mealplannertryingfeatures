@@ -7,8 +7,12 @@
 </head>
 <body>
 
-<a href="{{ route('image-upload.index') }}">
-    <button type="button">Zu Image Upload</button>
+<a href="{{ route('image-upload.index') }}" class="mt-3">
+    <button type="button" class="btn btn-primary">Zu Image Upload</button>
 </a>
+<a href="{{ route('ingredients.index') }}" class="mt-3">
+    <button type="button" class="btn btn-primary">zu Ingredients management</button>
+</a>
+
 </body>
 </html>

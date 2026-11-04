@@ -38,3 +38,5 @@ yarn-error.log
 /boost.json
 /opencode.json
 /opencode.jsonc
+/en_de_nutrients.jsonl
+/DS_Store

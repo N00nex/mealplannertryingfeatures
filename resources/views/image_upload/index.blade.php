@@ -1,10 +1,3 @@
-@import "tailwindcss";
-
-/* Optional: If you need Tailwind to scan custom directories or cached views */
-@source "../**/*.blade.php";
-@source "../**/*.js";
-@source "../../storage/framework/views/*.php";
-
 <?php
 use App\Models\ImageUpload;
 ?>
