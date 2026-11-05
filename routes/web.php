@@ -2,12 +2,10 @@
 
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\LebensmittelController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\OffController;
 use App\Http\Controllers\USDAIngredientController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-Route::get('/', fn () => Inertia::render('Home'))->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
@@ -34,3 +32,6 @@ Route::get('/lebensmittel', [LebensmittelController::class, 'index'])
     ->name('lebensmittel.index');
 
 Route::get('/USDAIngredients', [USDAIngredientController::class, 'index'])->name('foods.index');
+
+Route::resource('notes', NoteController::class);
+Route::get('/', [NoteController::class, 'index'])->name('home');
