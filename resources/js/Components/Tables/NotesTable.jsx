@@ -1,9 +1,9 @@
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
-import { ConfirmationModal } from './ConfirmationModal.jsx';
-import {Trash} from "lucide-react";
-import DeleteNote from "./DeleteNote.jsx";
-import EditNote from "./EditNote.jsx";
+import { ConfirmationDialog } from '../Dialogs/ConfirmationDialog.jsx';
+import DeleteButton from "../Buttons/DeleteNoteButton.jsx";
+import EditButton from "../Buttons/EditButton.jsx";
+import PrimaryButton from "../Buttons/PrimaryButton.jsx";
 
 export default function NotesTable({ notes = [] }) {
     const [deletingNote, setDeletingNote] = useState(null);
@@ -17,7 +17,6 @@ export default function NotesTable({ notes = [] }) {
             onSuccess: () => setDeletingNote(null),
         });
     };
-
     return (
         <>
             <div className="mt-8 flow-root">
@@ -28,68 +27,65 @@ export default function NotesTable({ notes = [] }) {
                         <tr>
                             <th
                                 scope="col"
-                                className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-white sm:pl-0"
+                                className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-black sm:pl-0"
                             >
                                 Title
                             </th>
                             <th
                                 scope="col"
-                                className="px-3 py-3.5 text-left text-sm font-semibold text-white"
+                                className="px-3 py-3.5 text-left text-sm font-semibold text-black "
                             >
                                 Description
                             </th>
                             <th
                                 scope="col"
-                                className="px-3 py-3.5 text-left text-sm font-semibold text-white"
+                                className="px-3 py-3.5 text-left text-sm font-semibold text-black"
                             >
                                 Urgency
                             </th>
                             <th
                                 scope="col"
-                                className="px-3 py-3.5 text-left text-sm font-semibold text-white"
+                                className="px-3 py-3.5 text-left text-sm font-semibold text-black"
                             >
                                 State
                             </th>
                             <th
                                 scope="col"
-                                className="py-3.5 pr-4 pl-3 text-right text-sm font-semibold text-white sm:pr-0"
+                                className="py-3.5 pr-4 pl-3 text-right text-sm font-semibold text-black sm:pr-0"
                             >
                                 Actions
                             </th>
                         </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/10">
+                        <tbody className="divide-y divide-white/200">
                         {notes.map((note) => (
                             <tr key={note.id}>
-                                <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-white sm:pl-0">
+                                <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-shadow-gray-900 sm:pl-0">
                                     {note.title}
                                 </td>
-                                <td className="px-3 py-4 text-sm text-gray-400">
+                                <td className="px-3 py-4 text-sm text-gray-900">
                                     {note.content}
                                 </td>
-                                <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-400">
+                                <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-900">
                                     {note.urgency}
                                 </td>
-                                <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-400">
+                                <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-900">
                                     {note.state}
                                 </td>
                                 <td className="py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
-                                    <a
+                                    <EditButton
                                         href={`/notes/${note.id}/edit`}
                                         className="mr-4 text-indigo-400 hover:text-indigo-300"
-                                    >
-                                        <EditNote />
-                                    </a>
-                                    <button
-                                        type="button"
+                                        aria-label={`Edit ${note.title}`}
+                                    />
+                                    <DeleteButton
                                         onClick={() => setDeletingNote(note)}
-                                        className="text-red-400 hover:text-red-300"
+                                        aria-label={`Delete ${note.title}`}
                                     >
-                                        <DeleteNote />
                                         <span className="sr-only">
                                             , {note.title}
                                         </span>
-                                    </button>
+                                    </DeleteButton>
                                 </td>
                             </tr>
                         ))}
@@ -100,13 +96,11 @@ export default function NotesTable({ notes = [] }) {
             </div>
 
             {deletingNote && (
-                <ConfirmationModal
+                <ConfirmationDialog
                     deletingNote={deletingNote}
                     setDeletingNote={setDeletingNote}
                     handleDelete={handleDelete}
                 />
-
-
             )}
         </>
     );

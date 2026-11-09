@@ -14,6 +14,7 @@ class NoteController extends Controller
     {
         return Inertia::render('Notes/index', [
             'notes' => Note::all(),
+            'user' => auth()->user(),
         ]);
     }
 
