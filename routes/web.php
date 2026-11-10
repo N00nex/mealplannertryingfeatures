@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\LebensmittelController;
+use App\Http\Controllers\MealPlanController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\OffController;
 use App\Http\Controllers\USDAIngredientController;
@@ -31,12 +32,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/USDAIngredients', [USDAIngredientController::class, 'index'])->name('foods.index');
 
     Route::resource('notes', NoteController::class);
-    Route::get('/', [NoteController::class, 'index'])->name('home');
+    Route::get('/notes', [NoteController::class, 'index'])->name('home');
 
-    Route::inertia('mealplanner', 'MealPlanner/Index')
+    Route::get('/', [MealPlanController::class, 'index'])
         ->name('mealplanner.index');
 
+    Route::get('/mealplanner/{recipe}', [MealPlanController::class, 'show'])
+        ->name('mealplanner.show');
 
+    Route::get('/mealplanner/{recipe}/edit', [MealPlanController::class, 'edit'])
+        ->name('mealplanner.edit');
 });
 
 require __DIR__.'/settings.php';

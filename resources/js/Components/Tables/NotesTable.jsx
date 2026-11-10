@@ -1,7 +1,7 @@
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { ConfirmationDialog } from '../Dialogs/ConfirmationDialog.jsx';
-import DeleteButton from "../Buttons/DeleteNoteButton.jsx";
+import DeleteButton from "../Buttons/DeleteButton.jsx";
 import EditButton from "../Buttons/EditButton.jsx";
 import PrimaryButton from "../Buttons/PrimaryButton.jsx";
 
@@ -97,9 +97,9 @@ export default function NotesTable({ notes = [] }) {
 
             {deletingNote && (
                 <ConfirmationDialog
-                    deletingNote={deletingNote}
-                    setDeletingNote={setDeletingNote}
-                    handleDelete={handleDelete}
+                    item={deletingNote}
+                    setItem={setDeletingNote}
+                    onConfirm={handleDelete}
                 />
             )}
         </>

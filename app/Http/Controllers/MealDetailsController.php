@@ -2,24 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Recipe;
 use Illuminate\Http\Request;
 
-class MealController extends Controller
+class MealDetailsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return inertia('MealDetails/Create');
     }
 
     /**
@@ -27,7 +24,11 @@ class MealController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validate
+
+        $recipe = Recipe::create($request->all());
+
+        return redirect()->route('MealDetails.show', ['id' => $recipe->id]);
     }
 
     /**
@@ -35,7 +36,9 @@ class MealController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return inertia('MealDetails/Show', [
+            'recipe' => $id,
+        ]);
     }
 
     /**

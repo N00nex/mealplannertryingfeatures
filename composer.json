@@ -9,7 +9,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.5",
         "inertiajs/inertia-laravel": "^3.7",
         "laravel/chisel": "^0.1.0",
         "laravel/fortify": "^1.37.2",
@@ -19,7 +19,8 @@
         "livewire/blaze": "^1.0",
         "livewire/flux": "^2.21",
         "livewire/livewire": "^4.1",
-        "openfoodfacts/openfoodfacts-laravel": "^0.8.0"
+        "openfoodfacts/openfoodfacts-laravel": "^0.8.0",
+        "spatie/laravel-tags": "^4.12"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.7",
