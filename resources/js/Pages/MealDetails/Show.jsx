@@ -19,9 +19,7 @@ export default function Show({ recipe = null }) {
             return;
         }
 
-        router.delete(`/recipes/${deletingRecipe.id}`, {
-            onSuccess: () => setDeletingRecipe(null),
-        });
+        router.delete(`/mealplanner/${deletingRecipe.id}`);
     };
 
     return (

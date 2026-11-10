@@ -40,6 +40,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mealplanner/{recipe}', [MealPlanController::class, 'show'])
         ->name('mealplanner.show');
 
+    Route::delete('/mealplanner/{recipe}', [MealPlanController::class, 'destroy'])
+        ->name('mealplanner.destroy');
+
     Route::get('/mealplanner/{recipe}/edit', [MealPlanController::class, 'edit'])
         ->name('mealplanner.edit');
 });

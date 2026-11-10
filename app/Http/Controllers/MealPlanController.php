@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Recipe;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -45,7 +47,6 @@ class MealPlanController extends Controller
     /**
      * Display the specified resource.
      */
-
     public function show(Recipe $recipe): Response
     {
         abort_unless($recipe->user_id === auth()->id(), 403);
@@ -78,8 +79,12 @@ class MealPlanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Recipe $recipe): RedirectResponse
     {
-        // Wen ein plan zurückgesetzt werden soll und keine rezepte mehr drin sind
+        abort_unless($recipe->user_id === auth()->id(), 403);
+
+        $recipe->delete();
+
+        return redirect()->route('mealplanner.index');
     }
 }
