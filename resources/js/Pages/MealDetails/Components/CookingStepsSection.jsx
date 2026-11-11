@@ -1,22 +1,118 @@
-export default function CookingStepsSection({ steps = [], editable = false }) {
-    const displayedSteps = steps.length > 0 ? steps : [{ instructions: '' }, { instructions: '' }]
+export default function CookingStepsSection({
+                                                steps = [],
+                                                editable = false,
+                                                setData,
+                                            }) {
+    const handleStepChange = (index, field, value) => {
+        const updatedSteps = steps.map((step, stepIndex) => {
+            if (stepIndex !== index) {
+                return step
+            }
+
+            return {
+                ...step,
+                [field]: value,
+            }
+        })
+
+        setData('cooking_steps', updatedSteps)
+    }
+
+    const addStep = () => {
+        setData('cooking_steps', [
+            ...steps,
+            {
+                instructions: '',
+                preparation_time: 0,
+            },
+        ])
+    }
+
+    const removeStep = (index) => {
+        setData(
+            'cooking_steps',
+            steps.filter((_, stepIndex) => stepIndex !== index),
+        )
+    }
 
     return (
-        <section className="border border-slate-400 bg-white" aria-labelledby="steps-heading">
+        <section className="border border-slate-400 bg-white">
             <div className="border-b border-slate-400 px-3 py-2">
-                <h2 id="steps-heading" className="text-sm font-medium text-slate-700">Speiseinformationen; <span className="float-right">--Einklappen--</span></h2>
+                <h2 className="text-sm font-medium text-slate-700">
+                    Zubereitungsschritte
+                </h2>
             </div>
+
             <div className="grid gap-8 p-5">
-                {displayedSteps.map((step, index) => (
-                    <article key={step.id ?? index} className="grid gap-3">
-                        <div className="flex flex-wrap items-center justify-between gap-3">
-                            <h3 className="text-xl font-bold text-slate-700">{index + 1}.</h3>
-                            {editable && <div className="flex gap-2 text-sm"><input className="w-12 border border-slate-400 p-1" defaultValue="0" type="number" /> h <input className="w-12 border border-slate-400 p-1" defaultValue="30" type="number" /> min <button type="button" className="rounded border border-slate-500 px-3 py-1 text-xs hover:bg-slate-100">Schritt Entfernen</button></div>}
+                {steps.map((step, index) => (
+                    <article
+                        key={step.id ?? index}
+                        className="grid gap-3"
+                    >
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xl font-bold">
+                                {index + 1}.
+                            </h3>
+
+                            {editable && (
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        value={step.preparation_time ?? 0}
+                                        onChange={(event) => {
+                                            handleStepChange(
+                                                index,
+                                                'preparation_time',
+                                                Number(event.target.value),
+                                            )
+                                        }}
+                                        className="w-20 border border-slate-400 p-1"
+                                    />
+
+                                    <span>Minuten</span>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => removeStep(index)}
+                                        className="rounded border border-slate-500 px-3 py-1 text-xs"
+                                    >
+                                        Schritt entfernen
+                                    </button>
+                                </div>
+                            )}
                         </div>
-                        {editable ? <textarea className="min-h-28 w-full border border-slate-400 p-2 text-sm" defaultValue={step.instructions} placeholder="Zubereitungsschritt eingeben..." /> :
-                            <p className="min-h-28 w-full border border-slate-400 bg-slate-50 p-2 text-sm">{step.instructions || 'Keine Anleitung vorhanden.'}</p>}
+
+                        {editable ? (
+                            <textarea
+                                value={step.instructions ?? ''}
+                                onChange={(event) => {
+                                    handleStepChange(
+                                        index,
+                                        'instructions',
+                                        event.target.value,
+                                    )
+                                }}
+                                className="min-h-28 w-full border border-slate-400 p-2 text-sm"
+                                placeholder="Zubereitungsschritt eingeben..."
+                            />
+                        ) : (
+                            <p className="min-h-28 w-full border border-slate-400 bg-slate-50 p-2 text-sm">
+                                {step.instructions || 'Keine Anleitung vorhanden.'}
+                            </p>
+                        )}
                     </article>
                 ))}
+
+                {editable && (
+                    <button
+                        type="button"
+                        onClick={addStep}
+                        className="text-left text-blue-700"
+                    >
+                        + Neuen Schritt hinzufügen
+                    </button>
+                )}
             </div>
         </section>
     )

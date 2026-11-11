@@ -14,6 +14,7 @@ class CookingStep extends Model
         'recipe_id',
         'instructions',
         'preparation_time',
+        'id',
     ];
 
     public function recipe(): BelongsTo

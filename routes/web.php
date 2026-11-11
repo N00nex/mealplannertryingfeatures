@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\LebensmittelController;
+use App\Http\Controllers\MealDetailsController;
 use App\Http\Controllers\MealPlanController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\OffController;
@@ -45,6 +46,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/mealplanner/{recipe}/edit', [MealPlanController::class, 'edit'])
         ->name('mealplanner.edit');
+
+    Route::patch('/mealplanner/{recipe}', [MealDetailsController::class, 'update'])
+        ->name('mealplanner.update');
 });
 
 require __DIR__.'/settings.php';

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -26,22 +25,6 @@ class MealPlanController extends Controller
                 ->inRandomOrder()
                 ->get(),
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        // todo Das ist das modal mit den filter
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        // todo wenn user einen neuen plan im verlauf des Kalenders erstellt
     }
 
     /**
@@ -66,14 +49,6 @@ class MealPlanController extends Controller
         return Inertia::render('MealDetails/Edit', [
             'recipe' => $recipe->load(['cookingSteps', 'tags']),
         ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        // todo wenn ein rezept ausgetauscht wird
     }
 
     /**
