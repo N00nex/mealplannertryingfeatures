@@ -21,11 +21,13 @@ class Unit extends Model
 
     public function recipes(): BelongsToMany
     {
-        return $this->belongsToMany(Recipe::class);
+        return $this->belongsToMany(Recipe::class, 'recipe_lebensmittel')
+            ->withPivot('lebensmittel_id');
     }
 
     public function lebensmittel(): BelongsToMany
     {
-        return $this->belongsToMany(Lebensmittel::class);
+        return $this->belongsToMany(Lebensmittel::class, 'recipe_lebensmittel')
+            ->withPivot('recipe_id');
     }
 }

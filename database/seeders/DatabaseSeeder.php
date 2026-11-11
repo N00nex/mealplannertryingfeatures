@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
+        $this->call(LebensmittelSeeder::class);
+        $this->call(UnitSeeder::class);
+
         $tags = collect([
             'vegetarian',
             'vegan',
@@ -51,7 +54,5 @@ class DatabaseSeeder extends Seeder
             });
 
         $this->call(NoteSeeder::class);
-        $this->call(LebensmittelSeeder::class);
-        $this->call(UnitSeeder::class);
     }
 }

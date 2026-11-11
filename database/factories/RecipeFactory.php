@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\CookingStep;
+use App\Models\Lebensmittel;
 use App\Models\Recipe;
+use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -23,6 +25,19 @@ class RecipeFactory extends Factory
             CookingStep::factory()->count(3)->create([
                 'recipe_id' => $recipe->id,
             ]);
+
+            $lebensmittel = Lebensmittel::query()->inRandomOrder()->limit(3)->get();
+            $units = Unit::query()->get();
+
+            if ($lebensmittel->isNotEmpty() && $units->isNotEmpty()) {
+                $recipe->lebensmittel()->attach(
+                    $lebensmittel->mapWithKeys(fn (Lebensmittel $lebensmittel): array => [
+                        $lebensmittel->getKey() => [
+                            'unit_id' => $units->random()->getKey(),
+                        ],
+                    ])->all()
+                );
+            }
 
             collect([
                 fake()->randomElement(['vegetarian', 'vegan', 'quick']),

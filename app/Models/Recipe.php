@@ -25,8 +25,9 @@ class Recipe extends Model
         return $this->hasMany(CookingStep::class);
     }
 
-    public function units(): BelongsToMany
+    public function lebensmittel(): BelongsToMany
     {
-        return $this->belongsToMany(Unit::class);
+        return $this->belongsToMany(Lebensmittel::class, 'recipe_lebensmittel')
+            ->withPivot('unit_id');
     }
 }

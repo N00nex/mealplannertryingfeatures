@@ -62,6 +62,8 @@ class MealDetailsController extends Controller
         abort_unless($recipe->user_id === auth()->id(), 404);
 
         $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
             'cooking_time' => ['required', 'integer', 'min:0'],
             'servings' => ['required', 'integer', 'min:1'],
             'cooking_steps' => ['array'],

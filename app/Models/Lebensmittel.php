@@ -35,4 +35,10 @@ class Lebensmittel extends Model
     {
         return $this->belongsToMany(Unit::class);
     }
+
+    public function recipes(): BelongsToMany
+    {
+        return $this->belongsToMany(Recipe::class, 'recipe_lebensmittel')
+            ->withPivot('unit_id');
+    }
 }
