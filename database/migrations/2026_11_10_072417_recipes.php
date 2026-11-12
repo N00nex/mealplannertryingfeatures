@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('cooking_time')->nullable();
             $table->integer('servings')->nullable();
+            $table->string('difficulty')->default('simple');
             $table->timestamps();
 
         });

@@ -9,6 +9,8 @@ use App\Http\Controllers\OffController;
 use App\Http\Controllers\USDAIngredientController;
 use Illuminate\Support\Facades\Route;
 
+Route::redirect('/', '/Mealplanner');
+
 Route::middleware(['auth'])->group(function () {
     Route::inertia('notes', 'Notes/index')->name('notes.index');
 
@@ -35,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('notes', NoteController::class);
     Route::get('/notes', [NoteController::class, 'index'])->name('home');
 
-    Route::get('/', [MealPlanController::class, 'index'])
+    Route::get('/Mealplanner', [MealPlanController::class, 'index'])
         ->name('mealplanner.index');
 
     Route::get('/mealplanner/{recipe}', [MealPlanController::class, 'show'])

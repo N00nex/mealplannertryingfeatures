@@ -1,25 +1,25 @@
-export default function IngredientsSection({ingredients = [], servings, setData,})
-{const updateIngredient = (index, field, value) => {
-        const updatedIngredients = ingredients.map((ingredient, ingredientIndex) =>
-            ingredientIndex === index
-                ? { ...ingredient, [field]: value }
-                : ingredient,
+export default function IngredientsSection({lebensmittel = [], servings, setData, allLebensmittel = [], allUnits = []}) {
+    const updateIngredient = (index, field, value) => {
+        const updatedLebensmittel = lebensmittel.map((item, lebensmittelIndex) =>
+            lebensmittelIndex === index
+                ? { ...item, [field]: value }
+                : item,
         )
 
-        setData('ingredients', updatedIngredients)
+        setData('lebensmittel', updatedLebensmittel)
     }
 
     const addIngredient = () => {
-        setData('ingredients', [
-            ...ingredients,
-            { name: '', amount: '', unit: '' },
+        setData('lebensmittel', [
+            ...lebensmittel,
+            { lebensmittel_id: '', quantity: '', unit_id: '' },
         ])
     }
 
     const removeIngredient = (index) => {
         setData(
-            'ingredients',
-            ingredients.filter((_, ingredientIndex) => ingredientIndex !== index),
+            'lebensmittel',
+            lebensmittel.filter((_, lebensmittelIndex) => lebensmittelIndex !== index),
         )
     }
 
@@ -43,42 +43,59 @@ export default function IngredientsSection({ingredients = [], servings, setData,
             </div>
 
             <div className="grid gap-2">
-                {ingredients.map((ingredient, index) => (
+                {lebensmittel.map((item, index) => (
                     <div
-                        key={ingredient.id ?? index}
+                        key={item.id ?? index}
                         className="grid gap-2 sm:grid-cols-[1fr_6rem_10rem_auto]"
                     >
-                        <input
-                            value={ingredient.name ?? ''}
+                        {/* 1. Lebensmittel-ID via Dropdown */}
+                        <select
+                            value={item.lebensmittel_id ?? ''}
                             onChange={(event) => {
-                                updateIngredient(index, 'name', event.target.value)
+                                updateIngredient(index, 'lebensmittel_id', event.target.value)
                             }}
-                            placeholder="Zutat"
-                            className="border border-slate-400 px-2 py-1"
-                        />
+                            className="border border-slate-400 px-2 py-1 bg-white"
+                        >
+                            <option value="">Zutat wählen...</option>
+                            {allLebensmittel.map((l) => (
+                                <option key={l.id} value={l.id}>
+                                    {l.name}
+                                </option>
+                            ))}
+                        </select>
 
+                        {/* 2. Menge */}
                         <input
-                            value={ingredient.amount ?? ''}
+                            type="number"
+                            step="any"
+                            value={item.quantity ?? ''}
                             onChange={(event) => {
-                                updateIngredient(index, 'amount', event.target.value)
+                                updateIngredient(index, 'quantity', event.target.value)
                             }}
                             placeholder="Menge"
                             className="border border-slate-400 px-2 py-1"
                         />
 
-                        <input
-                            value={ingredient.unit ?? ''}
+                        {/* 3. Unit-ID via Dropdown */}
+                        <select
+                            value={item.unit_id ?? ''}
                             onChange={(event) => {
-                                updateIngredient(index, 'unit', event.target.value)
+                                updateIngredient(index, 'unit_id', event.target.value)
                             }}
-                            placeholder="Einheit"
-                            className="border border-slate-400 px-2 py-1"
-                        />
+                            className="border border-slate-400 px-2 py-1 bg-white"
+                        >
+                            <option value="">Einheit wählen...</option>
+                            {allUnits.map((u) => (
+                                <option key={u.id} value={u.id}>
+                                    {u.symbol ?? u.name}
+                                </option>
+                            ))}
+                        </select>
 
                         <button
                             type="button"
                             onClick={() => removeIngredient(index)}
-                            className="border border-slate-500 px-3 py-1"
+                            className="border border-slate-500 px-3 py-1 bg-slate-100 hover:bg-slate-200"
                         >
                             Entfernen
                         </button>
@@ -88,7 +105,7 @@ export default function IngredientsSection({ingredients = [], servings, setData,
                 <button
                     type="button"
                     onClick={addIngredient}
-                    className="text-left text-blue-700"
+                    className="text-left text-blue-700 mt-2 font-medium"
                 >
                     + Neue Zutat hinzufügen
                 </button>

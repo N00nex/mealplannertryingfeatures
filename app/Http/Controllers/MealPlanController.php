@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recipe;
+use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -35,7 +36,7 @@ class MealPlanController extends Controller
         abort_unless($recipe->user_id === auth()->id(), 403);
 
         return Inertia::render('MealDetails/Show', [
-            'recipe' => $recipe->load(['cookingSteps', 'tags']),
+            'recipe' => $recipe->load(['cookingSteps', 'tags', 'lebensmittel']),
         ]);
     }
 
@@ -47,7 +48,8 @@ class MealPlanController extends Controller
         abort_unless($recipe->user_id === auth()->id(), 403);
 
         return Inertia::render('MealDetails/Edit', [
-            'recipe' => $recipe->load(['cookingSteps', 'tags']),
+            'recipe' => $recipe->load(['cookingSteps', 'tags', 'lebensmittel']),
+            'units' => Unit::query()->orderBy('name')->get(['id', 'name', 'symbol']),
         ]);
     }
 

@@ -11,8 +11,6 @@ export default function RecipeInformation({
 
     return (
         <section className="rounded border border-slate-400 bg-white p-4">
-            <h2 className="sr-only">Speiseinformationen</h2>
-
             <div className="grid gap-5 sm:grid-cols-2">
                 {editable ? (
                     <label className="grid gap-2 text-sm font-semibold">

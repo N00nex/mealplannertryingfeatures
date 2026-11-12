@@ -34,6 +34,7 @@ class RecipeFactory extends Factory
                     $lebensmittel->mapWithKeys(fn (Lebensmittel $lebensmittel): array => [
                         $lebensmittel->getKey() => [
                             'unit_id' => $units->random()->getKey(),
+                            'quantity' => fake()->randomFloat(2, 1, 10),
                         ],
                     ])->all()
                 );
@@ -63,6 +64,7 @@ class RecipeFactory extends Factory
             'user_id' => User::factory(),
             'name' => fake()->words(3, true),
             'description' => fake()->paragraph(),
+            'difficulty' => fake()->randomElement(['simple', 'medium', 'complex']),
             'cooking_time' => fake()->numberBetween(15, 120),
             'servings' => fake()->numberBetween(1, 8),
         ];

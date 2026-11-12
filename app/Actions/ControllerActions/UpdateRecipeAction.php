@@ -12,23 +12,30 @@ class UpdateRecipeAction
         return DB::transaction(function () use ($recipe, $validated) {
             // 1. Rezept-Stammdaten aktualisieren
             $recipe->update([
+                // 'name' => $validated['name'],
+                'difficulty' => $validated['difficulty'],
                 'cooking_time' => $validated['cooking_time'],
                 'servings' => $validated['servings'],
             ]);
 
-            if (! isset($validated['ingredients']) || ! isset($validated['units'])) {
-                return $recipe;
+            if (array_key_exists('lebensmittel', $validated)) {
+                $recipe->lebensmittel()->sync(
+                    collect($validated['lebensmittel'])
+                        ->mapWithKeys(fn (array $lebensmittel): array => [
+                            $lebensmittel['lebensmittel_id'] => [
+                                'unit_id' => $lebensmittel['unit_id'],
+                                'quantity' => $lebensmittel['quantity'],
+                            ],
+                        ])
+                        ->all()
+                );
             }
 
-            // Wenn keine Schritte übergeben wurden, abbrechen
-            if (! isset($validated['cooking_steps'])) {
+            if (! array_key_exists('cooking_steps', $validated)) {
                 return $recipe;
             }
 
             $steps = collect($validated['cooking_steps']);
-            $ingredients = collect($validated['ingredients']);
-            $units = collect($validated['units']);
-
             // 2. IDs herausfiltern, die im Request mitgeschickt wurden
             $submittedIds = $steps->pluck('id')->filter();
 
@@ -42,28 +49,6 @@ class UpdateRecipeAction
                     [
                         'instructions' => $stepData['instructions'] ?? null,
                         'preparation_time' => $stepData['preparation_time'] ?? null,
-                    ]
-                );
-            }
-
-            // 5. Zutaten aktualisieren oder neu anlegen
-            foreach ($ingredients as $ingredientData) {
-                $recipe->ingredients()->updateOrCreate(
-                    ['id' => $ingredientData['id'] ?? null],
-                    [
-                        'name' => $ingredientData['name'] ?? null,
-                        'amount' => $ingredientData['amount'] ?? null,
-                    ]
-                );
-            }
-
-            // 6. Einheiten aktualisieren oder neu anlegen
-            foreach ($units as $unitData) {
-                $recipe->units()->updateOrCreate(
-                    ['id' => $unitData['id'] ?? null],
-                    [
-                        'name' => $unitData['name'] ?? null,
-                        'abbreviation' => $unitData['abbreviation'] ?? null,
                     ]
                 );
             }

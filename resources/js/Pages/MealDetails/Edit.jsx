@@ -7,19 +7,23 @@ import RecipeImagePanel from './Components/RecipeImagePanel.jsx'
 import Navbar from '../../Layout/Navbar.jsx'
 import BackButton from '../../Components/Buttons/BackButton.jsx'
 
-export default function Edit({ recipe }) {
+export default function Edit({ recipe, allLebensmittel = [], allUnits = [] }) {
     const form = useForm({
         difficulty: recipe?.difficulty ?? 'simple',
         cooking_time: recipe?.cooking_time ?? 30,
         servings: recipe?.servings ?? 4,
-        ingredients: recipe?.ingredients ?? [],
+        name: recipe?.name ?? '',
+        lebensmittel: (recipe?.lebensmittel ?? []).map((l) => ({
+            lebensmittel_id: l.id,
+            unit_id: l.pivot?.unit_id ?? '',
+            quantity: l.pivot?.quantity ?? '',
+        })),
         tags: recipe?.tags ?? [],
         cooking_steps: recipe?.cooking_steps ?? [],
     })
 
     const submit = (event) => {
         event.preventDefault()
-
         form.patch(`/mealplanner/${recipe.id}`)
     }
 
@@ -50,9 +54,7 @@ export default function Edit({ recipe }) {
                                 disabled={form.processing}
                                 className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
                             >
-                                {form.processing
-                                    ? 'Speichern...'
-                                    : 'Änderungen speichern'}
+                                {form.processing ? 'Speichern...' : 'Änderungen speichern'}
                             </button>
                         </div>
                     </div>
@@ -68,9 +70,11 @@ export default function Edit({ recipe }) {
                             />
 
                             <IngredientsSection
-                                ingredients={form.data.ingredients}
+                                lebensmittel={form.data.lebensmittel}
                                 servings={form.data.servings}
                                 setData={form.setData}
+                                allLebensmittel={allLebensmittel}
+                                allUnits={allUnits}
                                 editable
                             />
 

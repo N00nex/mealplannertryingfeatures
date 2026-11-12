@@ -10,7 +10,8 @@ class Unit extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = [
+    ];
 
     protected function casts(): array
     {
@@ -21,13 +22,13 @@ class Unit extends Model
 
     public function recipes(): BelongsToMany
     {
-        return $this->belongsToMany(Recipe::class, 'recipe_lebensmittel')
+        return $this->belongsToMany(Recipe::class, 'lebensmittel_recipes_units')
             ->withPivot('lebensmittel_id');
     }
 
     public function lebensmittel(): BelongsToMany
     {
-        return $this->belongsToMany(Lebensmittel::class, 'recipe_lebensmittel')
+        return $this->belongsToMany(Lebensmittel::class, 'lebensmittel_recipes_units')
             ->withPivot('recipe_id');
     }
 }
