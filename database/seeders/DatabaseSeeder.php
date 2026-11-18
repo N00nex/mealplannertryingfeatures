@@ -2,57 +2,39 @@
 
 namespace Database\Seeders;
 
+use App\Models\Lebensmittel;
 use App\Models\Recipe;
+use App\Models\Unit;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
-use Spatie\Tags\Tag;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $user = User::query()->firstOrCreate(
+            ['email' => 'test@example.com'],
+            User::factory()->raw(['name' => 'Test User', 'email' => 'test@example.com']),
+        );
 
-        $user = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $this->call([LebensmittelSeeder::class, UnitSeeder::class]);
 
-        $this->call(LebensmittelSeeder::class);
-        $this->call(UnitSeeder::class);
-
-        $tags = collect([
-            'vegetarian',
-            'vegan',
-            'quick',
-            'family-friendly',
-            'high-protein',
-        ])->map(function (string $name): Tag {
-            return Tag::query()->where('name->en', $name)->first()
-                ?? Tag::create([
-                    'name' => ['en' => $name],
-                    'slug' => ['en' => Str::slug($name)],
-                ]);
-        });
+        $units = Unit::all();
+        $lebensmittel = Lebensmittel::all();
 
         Recipe::factory()
-            ->count(20)
+            ->count(5)
             ->for($user)
             ->create()
-            ->each(function (Recipe $recipe, int $index) use ($tags): void {
-                $recipe->syncTags([
-                    $tags[$index % $tags->count()],
-                    $tags[($index + 1) % $tags->count()],
-                ]);
+            ->each(function (Recipe $recipe) use ($units, $lebensmittel): void {
+                $recipe->lebensmittel()->attach(
+                    $lebensmittel->random(3)->mapWithKeys(fn (Lebensmittel $item): array => [
+                        $item->id => [
+                            'unit_id' => $units->random()->id,
+                            'quantity' => fake()->randomFloat(2, 1, 500),
+                        ],
+                    ])->all()
+                );
             });
-
-        $this->call(NoteSeeder::class);
     }
 }

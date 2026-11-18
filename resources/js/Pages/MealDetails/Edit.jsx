@@ -7,48 +7,57 @@ import RecipeImagePanel from './Components/RecipeImagePanel.jsx'
 import Navbar from '../../Layout/Navbar.jsx'
 import BackButton from '../../Components/Buttons/BackButton.jsx'
 
-export default function Edit({ recipe, allLebensmittel = [], allUnits = [] }) {
-    const form = useForm({
-        difficulty: recipe?.difficulty ?? 'simple',
-        cooking_time: recipe?.cooking_time ?? 30,
-        servings: recipe?.servings ?? 4,
-        name: recipe?.name ?? '',
-        lebensmittel: (recipe?.lebensmittel ?? []).map((l) => ({
-            lebensmittel_id: l.id,
-            unit_id: l.pivot?.unit_id ?? '',
-            quantity: l.pivot?.quantity ?? '',
-        })),
-        tags: recipe?.tags ?? [],
-        cooking_steps: recipe?.cooking_steps ?? [],
-    })
 
-    const submit = (event) => {
+export default function Edit({ recipe, allLebensmittel = [], units = [] }) {
+   const form = useForm({
+        name: recipe.name,
+        difficulty: recipe.difficulty,
+        cooking_time: recipe.cooking_time,
+        servings: recipe.servings,
+        tags: recipe.tags.map(tag => tag.id),
+        cooking_steps: (recipe.cooking_steps ?? []).map(step => ({
+            id: step.id,
+            instructions: step.instructions ?? '',
+            preparation_time: step.preparation_time ?? 0,
+        })),
+        lebensmittel: recipe.lebensmittel.map(lebensmittel => ({
+            id: lebensmittel.id,
+            pivot: {
+                unit_id: lebensmittel.pivot.unit_id,
+                quantity: lebensmittel.pivot.quantity
+            }
+        }))
+       ,})
+
+    const saveChanges = (event) => {
         event.preventDefault()
-        form.patch(`/mealplanner/${recipe.id}`)
+        form.patch(`/meal-details/${recipe.id}`)
     }
 
     return (
         <main className="min-h-svh bg-slate-50 text-slate-800">
             <Navbar />
 
-            <form onSubmit={submit}>
+            <form onSubmit={saveChanges}>
                 <div className="mx-auto max-w-7xl px-4 py-4">
                     <div className="flex items-center justify-between">
                         <Link
-                            href={`/mealplanner/${recipe.id}`}
+                            href={`/meal-details/${recipe.id}`}
                             className="inline-flex items-center gap-2 text-sm text-slate-600"
                         >
                             <BackButton />
                         </Link>
 
                         <div className="flex items-center gap-2">
+                            {/* Cancel button: Uses Inertia Link to go back without saving */}
                             <Link
-                                href={`/mealplanner/${recipe.id}`}
+                                href={`/meal-details/${recipe.id}`}
                                 className="rounded-md border border-slate-500 bg-white px-4 py-2 text-sm font-semibold"
                             >
                                 Abbrechen
                             </Link>
 
+                            {/* Save button: Regular submit button tied to the form's onSubmit */}
                             <button
                                 type="submit"
                                 disabled={form.processing}
@@ -71,10 +80,11 @@ export default function Edit({ recipe, allLebensmittel = [], allUnits = [] }) {
 
                             <IngredientsSection
                                 lebensmittel={form.data.lebensmittel}
+                                lebensmittelOptions={allLebensmittel}
+                                units={units}
                                 servings={form.data.servings}
                                 setData={form.setData}
-                                allLebensmittel={allLebensmittel}
-                                allUnits={allUnits}
+                                // Hier direkt mit Fallback übergeben
                                 editable
                             />
 

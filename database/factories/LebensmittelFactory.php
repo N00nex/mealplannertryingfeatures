@@ -5,9 +5,6 @@ namespace Database\Factories;
 use App\Models\Lebensmittel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<Lebensmittel>
- */
 class LebensmittelFactory extends Factory
 {
     protected $model = Lebensmittel::class;
@@ -15,23 +12,13 @@ class LebensmittelFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->words(2, true),
-            'synonyme' => fake()->optional()->words(2, true),
-            'kategorie' => fake()->randomElement([
-                'Früchte/Früchte frisch',
-                'Gemüse/Gemüse frisch',
-                'Getreideprodukte, Hülsenfrüchte und Kartoffeln',
-                'Milch und Milchprodukte',
-            ]),
-            'energie_kilojoule_kj' => fake()->randomFloat(1, 0, 3000),
-            'energie_kilokalorien_kcal' => fake()->randomFloat(1, 0, 700),
-            'fett_total_g' => fake()->randomFloat(1, 0, 80),
-            'fettsaeuren_gesaettigt_g' => fake()->randomFloat(1, 0, 40),
-            'kohlenhydrate_verfuegbar_g' => fake()->randomFloat(1, 0, 100),
-            'zucker_g' => fake()->randomFloat(1, 0, 80),
-            'nahrungsfasern_g' => fake()->randomFloat(1, 0, 40),
-            'protein_g' => fake()->randomFloat(1, 0, 50),
-            'salz_nacl_g' => fake()->randomFloat(1, 0, 10),
+            'id' => $this->faker->unique()->numberBetween(10000, 99999), // Manuelle ID für lebensmittel_komplett
+            'name' => $this->faker->randomElement(['Tomate', 'Mehl', 'Milch', 'Zucker', 'Salz', 'Butter', 'Ei']),
+            'kategorie' => 'Allgemein',
+            'energie_kilokalorien_kcal' => $this->faker->randomFloat(2, 20, 500),
+            'protein_g' => $this->faker->randomFloat(2, 0, 30),
+            'fett_total_g' => $this->faker->randomFloat(2, 0, 50),
+            'kohlenhydrate_verfuegbar_g' => $this->faker->randomFloat(2, 0, 80),
         ];
     }
 }

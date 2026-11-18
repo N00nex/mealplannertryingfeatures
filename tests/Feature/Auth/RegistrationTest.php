@@ -9,7 +9,7 @@ beforeEach(function () {
 test('registration screen can be rendered', function () {
     $response = $this->get(route('register'));
 
-    $response->assertOk();
+    $response->assertOk()->assertInertia(fn ($page) => $page->component('auth/Register', false));
 });
 
 test('new users can register', function () {

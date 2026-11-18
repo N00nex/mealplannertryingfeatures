@@ -13,22 +13,9 @@ class Unit extends Model
     protected $guarded = [
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'quantity' => 'decimal:2',
-        ];
-    }
-
     public function recipes(): BelongsToMany
     {
         return $this->belongsToMany(Recipe::class, 'lebensmittel_recipes_units')
             ->withPivot('lebensmittel_id');
-    }
-
-    public function lebensmittel(): BelongsToMany
-    {
-        return $this->belongsToMany(Lebensmittel::class, 'lebensmittel_recipes_units')
-            ->withPivot('recipe_id');
     }
 }

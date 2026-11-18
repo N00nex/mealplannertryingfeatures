@@ -1,41 +1,12 @@
 <?php
 
-use App\Http\Controllers\ImageUploadController;
-use App\Http\Controllers\LebensmittelController;
 use App\Http\Controllers\MealDetailsController;
 use App\Http\Controllers\MealPlanController;
-use App\Http\Controllers\NoteController;
-use App\Http\Controllers\OffController;
-use App\Http\Controllers\USDAIngredientController;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/Mealplanner');
+Route::redirect('/', '/Mealplanner')->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::inertia('notes', 'Notes/index')->name('notes.index');
-
-    Route::get('/image-upload', [ImageUploadController::class, 'index'])
-        ->name('image-upload.index');
-
-    Route::post('/image-upload', [ImageUploadController::class, 'store'])
-        ->name('image-upload.store');
-
-    Route::get('/image-upload/{imageArray}/file', [ImageUploadController::class, 'show'])
-        ->name('image-upload.show');
-
-    Route::delete('/image-upload/{imageArray}', [ImageUploadController::class, 'destroy'])
-        ->name('image-upload.destroy');
-
-    Route::get('/ingredients', [OffController::class, 'index'])
-        ->name('ingredients.index');
-
-    Route::get('/lebensmittel', [LebensmittelController::class, 'index'])
-        ->name('lebensmittel.index');
-
-    Route::get('/USDAIngredients', [USDAIngredientController::class, 'index'])->name('foods.index');
-
-    Route::resource('notes', NoteController::class);
-    Route::get('/notes', [NoteController::class, 'index'])->name('home');
 
     Route::get('/Mealplanner', [MealPlanController::class, 'index'])
         ->name('mealplanner.index');
@@ -49,8 +20,20 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mealplanner/{recipe}/edit', [MealPlanController::class, 'edit'])
         ->name('mealplanner.edit');
 
-    Route::patch('/mealplanner/{recipe}', [MealDetailsController::class, 'update'])
-        ->name('mealplanner.update');
+    Route::get('/meal-details/{recipe}', [MealDetailsController::class, 'show'])
+        ->name('meal-details.show');
+
+    Route::get('/meal-details/{recipe}/edit', [MealDetailsController::class, 'edit'])
+        ->name('meal-details.edit');
+
+    Route::post('/meal', [MealPlanController::class, 'edit'])
+        ->name('mealplan.edit');
+
+    Route::patch('/meal-details/{recipe}', [MealDetailsController::class, 'update'])
+        ->name('meal-details.update');
+
+    Route::post('/meal-details', [MealDetailsController::class, 'store'])
+        ->name('meal-details.store');
 });
 
 require __DIR__.'/settings.php';

@@ -67,6 +67,7 @@ export default function Index({ recipes = [] }) {
                                             Speise
                                         </th>
                                         {days.map((day, dayIndex) => {
+                                            // 1. Multiplikationszeichen '*' hinzugefügt
                                             const recipe = recipes[(mealIndex * days.length) + dayIndex]
 
                                             return (
@@ -76,13 +77,12 @@ export default function Index({ recipes = [] }) {
                                                 >
                                                     <div className="flex flex-col items-start gap-1">
                                                         <span>{recipe?.name}</span>
-
                                                         {recipe && (
-                                                            <InfoButton href={`/mealplanner/${recipe.id}`} value={recipe.name} />
+                                                            <InfoButton href={`/meal-details/${recipe.id}`} value={recipe.name} />
                                                         )}
                                                     </div>
                                                 </td>
-                                            )
+                                        )
                                         })}
                                     </tr>
                                     <tr className="border-t border-ttb10-line">
@@ -93,15 +93,16 @@ export default function Index({ recipes = [] }) {
                                             Tags
                                         </th>
                                         {days.map((day, dayIndex) => {
+                                            // 1. Multiplikationszeichen '*' hinzugefügt
                                             const recipe = recipes[(mealIndex * days.length) + dayIndex]
 
                                             return (
-                                            <td
-                                                key={`${meal}-${day}-tags`}
-                                                className="h-14 border-r border-ttb10-line bg-ttb10-time px-2 py-3"
-                                            >
-                                                {recipe?.tags?.map((tag) => tag.name?.en ?? tag.name).join(', ')}
-                                            </td>
+                                                <td
+                                                    key={`${meal}-${day}-tags`}
+                                                    className="h-14 border-r border-ttb10-line bg-ttb10-time px-2 py-3"
+                                                >
+                                                    {recipe?.tags?.map((tag) => tag.name?.en ?? tag.name).join(', ')}
+                                                </td>
                                             )
                                         })}
                                     </tr>

@@ -27,12 +27,27 @@ class Recipe extends Model
 
     public function lebensmittel(): BelongsToMany
     {
-        return $this->belongsToMany(Lebensmittel::class, 'lebensmittel_recipes_units')
+        return $this->belongsToMany(Lebensmittel::class, 'lebensmittel_recipes_units', 'recipe_id', 'lebensmittel_id')
+            ->using(LebensmittelRecipeUnit::class)
             ->withPivot('unit_id', 'quantity');
     }
 
-    public function units(): HasMany
+    /**
+     * The ingredient rows (Lebensmittel + Unit + quantity) of this recipe.
+     */
+    public function ingredients(): HasMany
     {
-        return $this->hasMany(Unit::class);
+        return $this->hasMany(LebensmittelRecipeUnit::class);
+    }
+
+    public function loadRecipeDetails(): Recipe
+    {
+        return $this->load([
+            'cookingSteps',
+            'tags',
+            'lebensmittel',
+            'ingredients.lebensmittel',
+            'ingredients.unit',
+        ]);
     }
 }
